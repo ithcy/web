@@ -1,3 +1,4 @@
+import path from "path";
 import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
@@ -13,6 +14,11 @@ export default defineConfig({
     }),
     react(),
   ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
   server: {
     proxy: {
       "/api": "http://localhost:1337",

@@ -12,7 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SetupRouteImport } from './routes/setup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LayoutRouteImport } from './routes/_layout'
-import { Route as LayoutIndexRouteImport } from './routes/_layout.index'
+import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 
 const SetupRoute = SetupRouteImport.update({
   id: '/setup',

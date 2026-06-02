@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
+import Sidebar from "../components/sidebar";
 
 export const Route = createFileRoute("/_layout")({
   component: RouteComponent,
@@ -52,5 +53,14 @@ function SysVersionsLayout() {
     return <Navigate to="/login" />;
   }
 
-  return <Outlet />;
+  return (
+    <div className="flex h-full">
+      <div className="bg-base-300 w-64">
+        <Sidebar />
+      </div>
+      <div className="flex-1">
+        <Outlet />
+      </div>
+    </div>
+  );
 }
