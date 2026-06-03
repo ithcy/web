@@ -164,6 +164,12 @@ export type TorrentsCount = {
   trackers: Record<string, number>;
 };
 
+export type SysStatus = {
+  status: "ok" | "setup";
+};
+
+export type SysVersions = {};
+
 export class RpcError extends Error {
   data: any;
   code: number;
@@ -206,6 +212,10 @@ async function jsonrpc<T>(method: string, params?: any) {
   const data = await res.json();
 
   if (data.error) {
+    if (data.error.code === 1000 || data.error.code === 1001) {
+      throw new AuthError(data.error.message);
+    }
+
     throw new RpcError(data.error.code, data.error.message, data.error.data);
   }
 
@@ -219,6 +229,7 @@ export function useInvoker<T>(
   return useMutation({
     mutationFn: (params: any) => jsonrpc<T>(method, params),
     mutationKey: [method],
+    networkMode: "always",
     ...options,
   });
 }

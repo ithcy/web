@@ -7,6 +7,7 @@ import "./index.css";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthError } from "@/api";
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -24,7 +25,20 @@ const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
 
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry(failureCount, error) {
+          if (error instanceof AuthError) {
+            router.navigate({ to: "/login" });
+            return false;
+          }
+
+          return failureCount < 3;
+        },
+      },
+    },
+  });
 
   root.render(
     <StrictMode>

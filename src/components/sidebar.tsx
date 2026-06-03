@@ -1,6 +1,13 @@
 import { type SessionsList, type TorrentsCount, useRPC } from "@/api";
 import { Link, useNavigate, useSearch } from "@tanstack/react-router";
-import { ArrowLeftRight, Check, Download, Pause, TriangleAlert, Upload } from "lucide-react";
+import {
+  ArrowLeftRight,
+  Check,
+  Download,
+  Pause,
+  TriangleAlert,
+  Upload,
+} from "lucide-react";
 import { useEffect } from "react";
 
 export default function Sidebar() {
@@ -8,7 +15,7 @@ export default function Sidebar() {
   const torrentSearch = useSearch({ from: "/_layout/", shouldThrow: false });
 
   const sessions = useRPC<SessionsList>("sessions.list", null, {
-    refetchInterval: 3000,
+    refetchInterval: 5000,
   });
 
   useEffect(() => {
@@ -29,6 +36,12 @@ export default function Sidebar() {
 
   return (
     <div>
+      <div className="p-3">
+        <Link to="/add" className="btn btn-primary btn-block">
+          Add torrent
+        </Link>
+      </div>
+
       <ul className="menu w-full">
         <li className="menu-title">Sessions</li>
         {sessions.isLoading && (
@@ -41,13 +54,24 @@ export default function Sidebar() {
           <li key={`session_${s.id}`}>
             <Link
               to="/"
+              search={{
+                ...torrentSearch,
+                session_id: s.id,
+              }}
               className="flex justify-between w-full"
               activeProps={{
                 className: "bg-base-100",
               }}
             >
               <div className="flex items-center space-x-2">
-                <div className="size-4 aspect-square bg-red-400"></div>
+                <span
+                  className="size-3 rounded"
+                  style={{
+                    backgroundColor: s.metadata["color"]
+                      ? String(s.metadata["color"])
+                      : "#ccc",
+                  }}
+                ></span>
                 <span>{s.name}</span>
               </div>
               <span>{s.torrents_total}</span>

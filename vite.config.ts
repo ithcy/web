@@ -21,7 +21,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": "http://localhost:1337",
+      "/api": process.env.PORLA_HOST ?? "http://localhost:1337",
     },
   },
 });

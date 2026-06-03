@@ -13,6 +13,7 @@ import { Route as SetupRouteImport } from './routes/setup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
+import { Route as LayoutAddRouteImport } from './routes/_layout/add'
 
 const SetupRoute = SetupRouteImport.update({
   id: '/setup',
@@ -33,15 +34,22 @@ const LayoutIndexRoute = LayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutAddRoute = LayoutAddRouteImport.update({
+  id: '/add',
+  path: '/add',
+  getParentRoute: () => LayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
   '/login': typeof LoginRoute
   '/setup': typeof SetupRoute
+  '/add': typeof LayoutAddRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/setup': typeof SetupRoute
+  '/add': typeof LayoutAddRoute
   '/': typeof LayoutIndexRoute
 }
 export interface FileRoutesById {
@@ -49,14 +57,21 @@ export interface FileRoutesById {
   '/_layout': typeof LayoutRouteWithChildren
   '/login': typeof LoginRoute
   '/setup': typeof SetupRoute
+  '/_layout/add': typeof LayoutAddRoute
   '/_layout/': typeof LayoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/setup'
+  fullPaths: '/' | '/login' | '/setup' | '/add'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/setup' | '/'
-  id: '__root__' | '/_layout' | '/login' | '/setup' | '/_layout/'
+  to: '/login' | '/setup' | '/add' | '/'
+  id:
+    | '__root__'
+    | '/_layout'
+    | '/login'
+    | '/setup'
+    | '/_layout/add'
+    | '/_layout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -95,14 +110,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/add': {
+      id: '/_layout/add'
+      path: '/add'
+      fullPath: '/add'
+      preLoaderRoute: typeof LayoutAddRouteImport
+      parentRoute: typeof LayoutRoute
+    }
   }
 }
 
 interface LayoutRouteChildren {
+  LayoutAddRoute: typeof LayoutAddRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutAddRoute: LayoutAddRoute,
   LayoutIndexRoute: LayoutIndexRoute,
 }
 
