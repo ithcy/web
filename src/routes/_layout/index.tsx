@@ -1,6 +1,7 @@
 import { type TorrentsList, useRPC, type InfoHash, type Torrent } from "@/api";
 import TorrentDetailsPanel from "@/components/torrent-details-panel";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { filesize } from "filesize";
 import { Menu } from "lucide-react";
 
 type TorrentFilterStatus =
@@ -128,27 +129,27 @@ function TorrentsTable({ torrents }: TorrentsTableProps) {
   const search = Route.useSearch();
 
   return (
-    <table className="table table-zebra">
+    <table className="table table-zebra table-fixed">
       <thead>
         <tr>
           <th className="text-right w-4">#</th>
-          <th>Name</th>
-          <th>Size</th>
-          <th>Progress</th>
-          <th></th>
+          <th className="">Name</th>
+          <th className="w-32">Size</th>
+          <th className="w-32">Progress</th>
+          <th className="w-4"></th>
         </tr>
       </thead>
       <tbody>
         {torrents.map((t) => (
           <tr key={`${t.info_hash[0]}`}>
-            <td className="text-right">
+            <td className="text-right text-gray-300">
               {t.queue_position < 0 ? (
-                <span className="text-gray-600">-</span>
+                <span>-</span>
               ) : (
                 `${t.queue_position + 1}`
               )}
             </td>
-            <td>
+            <td className="overflow-hidden text-ellipsis whitespace-nowrap">
               <Link
                 to="/"
                 search={{
@@ -161,9 +162,9 @@ function TorrentsTable({ torrents }: TorrentsTableProps) {
                 {t.name}
               </Link>
             </td>
-            <td>{t.total_done}</td>
+            <td className="text-gray-300">{filesize(t.total_done)}</td>
             <td>
-              <progress value={t.progress} max={1}></progress>
+              <progress className="progress w-full" value={t.progress} max={1}></progress>
             </td>
             <td className="text-right">
               <button
