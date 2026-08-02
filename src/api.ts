@@ -26,6 +26,28 @@ export type TorrentsList = {
   torrents_total: number;
 };
 
+export type SessionsGet = {
+  session: Session;
+};
+
+export type Session = {
+  id: number;
+  name: string;
+  is_default: boolean;
+  is_listening: boolean;
+  is_paused: boolean;
+  metadata: Record<string, unknown>;
+  torrents_total: number;
+};
+
+export type SessionSettings = {
+  active_limit: number;
+};
+
+export type TorrentsGet = {
+  torrent: Torrent;
+};
+
 export type InfoHash = [string | null, string | null] | string;
 
 export type Torrent = {
@@ -64,12 +86,18 @@ export type Torrent = {
   tags: string[];
   total: number;
   total_done: number;
+  total_wanted: number;
+  total_wanted_done: number;
   upload_payload_rate: number;
   upload_rate: number;
 };
 
 export type PluginsList = {
   plugins: PluginsListItem[];
+};
+
+export type PresetsGet = {
+  preset: Preset;
 };
 
 export type PresetsList = {
@@ -82,17 +110,11 @@ export type PluginsListItem = {
 };
 
 export type SessionsList = {
-  sessions: SessionsListItem[];
+  sessions: Session[];
 };
 
-export type SessionsListItem = {
-  id: number;
-  name: string;
-  is_default: boolean;
-  is_listening: boolean;
-  is_paused: boolean;
-  metadata: Record<string, unknown>;
-  torrents_total: number;
+export type SessionsSettingsGet = {
+  settings: SessionSettings;
 };
 
 export type Plugin = {
@@ -142,8 +164,26 @@ export type TorrentsPeersList = {
   peers: Peer[];
 };
 
+export type AnnounceInfohash = {
+  complete_sent: boolean;
+  fails: number;
+  last_error: string;
+};
+
+export type AnnounceEndpoint = {
+  enabled: boolean;
+  info_hashes: [AnnounceInfohash, AnnounceInfohash];
+  local_endpoint: [string, number];
+};
+
 export type AnnounceEntry = {
+  endpoints: AnnounceEndpoint[];
+  fail_limit: number;
+  source: number;
+  tier: number;
+  trackerid: string;
   url: string;
+  verified: boolean;
 };
 
 export type TorrentsTrackersList = {

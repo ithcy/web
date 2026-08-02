@@ -1,5 +1,12 @@
-import { type TorrentsList, useRPC, type InfoHash, type Torrent } from "@/api";
+import {
+  type TorrentsList,
+  useRPC,
+  type InfoHash,
+  type Torrent,
+  useInvoker,
+} from "@/api";
 import TorrentDetailsPanel from "@/components/torrent-details-panel";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { filesize } from "filesize";
 import { Menu } from "lucide-react";
@@ -127,6 +134,12 @@ type TorrentsTableProps = {
 
 function TorrentsTable({ torrents }: TorrentsTableProps) {
   const search = Route.useSearch();
+  const queryClient = useQueryClient();
+
+  const remove = useInvoker("torrents.remove", {
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["torrents.list"] }),
+  });
 
   return (
     <table className="table table-zebra table-fixed">
@@ -136,6 +149,8 @@ function TorrentsTable({ torrents }: TorrentsTableProps) {
           <th className="">Name</th>
           <th className="w-32">Size</th>
           <th className="w-32">Progress</th>
+          <th className="w-32 text-right">DL</th>
+          <th className="w-32 text-right">UL</th>
           <th className="w-4"></th>
         </tr>
       </thead>
@@ -156,15 +171,30 @@ function TorrentsTable({ torrents }: TorrentsTableProps) {
                   ...search,
                   selected_info_hash: t.info_hash,
                   selected_session_id: search.session_id,
+                  selected_tab_id: search.selected_tab_id || "general",
                 }}
                 className="hover:underline"
               >
                 {t.name}
               </Link>
             </td>
-            <td className="text-gray-300">{filesize(t.total_done)}</td>
+            <td className="text-gray-300">{filesize(t.total_wanted)}</td>
             <td>
-              <progress className="progress w-full" value={t.progress} max={1}></progress>
+              <progress
+                className="progress w-full"
+                value={t.progress}
+                max={1}
+              ></progress>
+            </td>
+            <td className="text-right">
+              {t.download_payload_rate > 0
+                ? `${filesize(t.download_payload_rate)}/s`
+                : "-"}
+            </td>
+            <td className="text-right">
+              {t.upload_payload_rate > 0
+                ? `${filesize(t.upload_payload_rate)}/s`
+                : "-"}
             </td>
             <td className="text-right">
               <button
@@ -182,16 +212,17 @@ function TorrentsTable({ torrents }: TorrentsTableProps) {
                 style={{ positionAnchor: `--anchor-${t.info_hash[0]}` }}
               >
                 <li>
-                  <a>Item 1</a>
-                </li>
-                <li>
-                  <a>Item 2</a>
-                </li>
-                <li>
-                  <a>Item 2</a>
-                </li>
-                <li>
-                  <a>Item 2</a>
+                  <button
+                    onClick={async () => {
+                      await remove.mutateAsync({
+                        info_hashes: [t.info_hash],
+                        session_id: search.session_id,
+                        remove_data: false,
+                      });
+                    }}
+                  >
+                    Remove
+                  </button>
                 </li>
               </ul>
             </td>

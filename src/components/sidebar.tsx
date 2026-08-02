@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import {
   ArrowLeftRight,
   Check,
+  Cog,
   Download,
   Pause,
   TriangleAlert,
@@ -35,52 +36,70 @@ export default function Sidebar() {
   }, [torrentSearch, sessions]);
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <div className="p-3">
-        <Link to="/add" className="btn btn-primary btn-block">
+        <Link to="/add" className="btn btn-block">
           Add torrent
         </Link>
       </div>
 
+      <div className="flex-1">
+        <ul className="menu w-full">
+          <li className="menu-title">Sessions</li>
+          {sessions.isLoading && (
+            <li>
+              <span className="loading loading-spinner loading-md"></span>
+            </li>
+          )}
+
+          {sessions.data?.sessions.map((s) => (
+            <li key={`session_${s.id}`}>
+              <Link
+                to="/"
+                search={{
+                  ...torrentSearch,
+                  session_id: s.id,
+                }}
+                className="flex justify-between w-full"
+                activeProps={{
+                  className: "bg-base-100",
+                }}
+              >
+                <div className="flex items-center space-x-2">
+                  <span
+                    className="size-3 rounded"
+                    style={{
+                      backgroundColor: s.metadata["color"]
+                        ? String(s.metadata["color"])
+                        : "#ccc",
+                    }}
+                  ></span>
+                  <span>{s.name}</span>
+                </div>
+                <span>{s.torrents_total}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <TorrentsList session_id={torrentSearch?.session_id} />
+      </div>
+
       <ul className="menu w-full">
-        <li className="menu-title">Sessions</li>
-        {sessions.isLoading && (
-          <li>
-            <span className="loading loading-spinner loading-md"></span>
-          </li>
-        )}
-
-        {sessions.data?.sessions.map((s) => (
-          <li key={`session_${s.id}`}>
-            <Link
-              to="/"
-              search={{
-                ...torrentSearch,
-                session_id: s.id,
-              }}
-              className="flex justify-between w-full"
-              activeProps={{
-                className: "bg-base-100",
-              }}
-            >
-              <div className="flex items-center space-x-2">
-                <span
-                  className="size-3 rounded"
-                  style={{
-                    backgroundColor: s.metadata["color"]
-                      ? String(s.metadata["color"])
-                      : "#ccc",
-                  }}
-                ></span>
-                <span>{s.name}</span>
-              </div>
-              <span>{s.torrents_total}</span>
-            </Link>
-          </li>
-        ))}
+        <li>
+          <Link
+            to="/settings"
+            activeProps={{
+              className: "bg-base-100",
+            }}
+          >
+            <div className="flex space-x-2 items-center">
+              <Cog className="size-4 text-gray-300" />
+              <span>Settings</span>
+            </div>
+          </Link>
+        </li>
       </ul>
-
-      <TorrentsList session_id={torrentSearch?.session_id} />
     </div>
   );
 }

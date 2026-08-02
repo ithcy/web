@@ -27,8 +27,8 @@ function RouteComponent() {
 
   const form = useForm({
     defaultValues: {
-      username: "foo",
-      password: "bar",
+      username: "",
+      password: "",
     },
     onSubmit: async ({ value }) => {
       const r = await authInit.mutateAsync(value);
@@ -50,11 +50,38 @@ function RouteComponent() {
         }}
       >
         <fieldset className="fieldset">
-          <label className="label">Username</label>
-          <input type="text" className="input" placeholder="porla-user-ab12" />
+          <form.Field
+            name="username"
+            children={(field) => (
+              <>
+                <label className="label">Username</label>
+                <input
+                  type="text"
+                  className="input"
+                  placeholder="porla-user-ab12"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+              </>
+            )}
+          />
 
-          <label className="label">Password</label>
-          <input type="password" className="input" />
+          <form.Field
+            name="password"
+            children={(field) => (
+              <>
+                <label className="label">Password</label>
+                <input
+                  type="password"
+                  className="input"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+              </>
+            )}
+          />
         </fieldset>
         <button type="submit" className="btn btn-primary">
           Create user
