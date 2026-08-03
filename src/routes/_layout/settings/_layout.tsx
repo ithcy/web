@@ -112,7 +112,9 @@ function PluginsMenu() {
         </li>
       ))}
       <li>
-        <button className="btn btn-xs">Add plugin</button>
+        <Link to="/settings/plugins/add" className="btn btn-xs">
+          Add plugin
+        </Link>
       </li>
     </ul>
   );
