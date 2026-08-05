@@ -215,7 +215,7 @@ function TorrentsTable({ torrents }: TorrentsTableProps) {
                   <button
                     onClick={async () => {
                       await remove.mutateAsync({
-                        info_hashes: [t.info_hash],
+                        info_hash: t.info_hash,
                         session_id: search.session_id,
                         remove_data: false,
                       });
