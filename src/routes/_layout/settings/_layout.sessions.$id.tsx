@@ -5,6 +5,7 @@ import {
   useInvoker,
   useRPC,
 } from "@/api";
+import { useAppForm } from "@/hooks/form";
 import { useForm } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -49,7 +50,7 @@ function SessionData({ session }: { session: Session }) {
       queryClient.invalidateQueries({ queryKey: ["sessions.list"] }),
   });
 
-  const form = useForm({
+  const form = useAppForm({
     defaultValues: {
       name: session.name,
       color:
@@ -83,20 +84,9 @@ function SessionData({ session }: { session: Session }) {
           form.handleSubmit();
         }}
       >
-        <form.Field
+        <form.AppField
           name="name"
-          children={(field) => (
-            <div>
-              <label className="label">Name</label>
-              <input
-                type="text"
-                className="input"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-            </div>
-          )}
+          children={(field) => <field.TextField label="Name" />}
         />
 
         <form.Field

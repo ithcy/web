@@ -76,7 +76,7 @@ export default function Sidebar() {
                   ></span>
                   <span>{s.name}</span>
                 </div>
-                <span>{s.torrents_total}</span>
+                <span>{s.state?.torrents_total}</span>
               </Link>
             </li>
           ))}

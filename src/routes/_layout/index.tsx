@@ -133,12 +133,15 @@ type TorrentsTableProps = {
 };
 
 function TorrentsTable({ torrents }: TorrentsTableProps) {
+  const navigate = Route.useNavigate();
   const search = Route.useSearch();
   const queryClient = useQueryClient();
 
   const remove = useInvoker("torrents.remove", {
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["torrents.list"] }),
+      queryClient.invalidateQueries({
+        queryKey: ["sessions.list", "torrents.count", "torrents.list"],
+      }),
   });
 
   return (
@@ -219,6 +222,24 @@ function TorrentsTable({ torrents }: TorrentsTableProps) {
                         session_id: search.session_id,
                         remove_data: false,
                       });
+
+                      if (
+                        search.selected_info_hash &&
+                        search.selected_session_id &&
+                        search.selected_info_hash[0] == t.info_hash[0] &&
+                        search.selected_info_hash[1] == t.info_hash[1] &&
+                        search.selected_session_id == search.session_id
+                      ) {
+                        await navigate({
+                          to: "/",
+                          search: {
+                            ...search,
+                            selected_info_hash: undefined,
+                            selected_session_id: undefined,
+                            selected_tab_id: undefined,
+                          },
+                        });
+                      }
                     }}
                   >
                     Remove

@@ -42,6 +42,7 @@ export default function TorrentDetailsPanel({
         <div role="tablist" className="tabs tabs-box tabs-sm">
           {tabs.map((t) => (
             <Link
+              key={t.id}
               to="/"
               role="tab"
               className="tab"

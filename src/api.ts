@@ -17,7 +17,10 @@ export const TorrentFlags = {
   AutoManaged: 5,
 };
 
-export type ErrC = {};
+export type ErrC = {
+  message: string;
+  value: number;
+};
 
 export type TorrentsList = {
   page: number;
@@ -34,10 +37,12 @@ export type Session = {
   id: number;
   name: string;
   is_default: boolean;
-  is_listening: boolean;
-  is_paused: boolean;
   metadata: Record<string, unknown>;
-  torrents_total: number;
+  state: null | {
+    is_listening: boolean;
+    is_paused: boolean;
+    torrents_total: number;
+  };
 };
 
 export type SessionSettings = {
@@ -143,8 +148,12 @@ export type Preset = {
 };
 
 export type TorrentFile = {
+  absolute_path: boolean;
+  flags: string[];
   name: string;
+  path: string;
   size: number;
+  symlink: boolean;
 };
 
 export type TorrentsFilesList = {
@@ -156,8 +165,11 @@ export type TorrentsFilesProgress = {
 };
 
 export type Peer = {
-  ip: [string, number];
   client: string;
+  connection_type: string;
+  flags: string[];
+  ip: [string, number];
+  source: string[];
 };
 
 export type TorrentsPeersList = {
@@ -167,7 +179,11 @@ export type TorrentsPeersList = {
 export type AnnounceInfohash = {
   complete_sent: boolean;
   fails: number;
-  last_error: string;
+  last_error: null | ErrC;
+  min_announce: number;
+  next_announce: number;
+  start_sent: boolean;
+  updating: boolean;
 };
 
 export type AnnounceEndpoint = {
@@ -179,7 +195,7 @@ export type AnnounceEndpoint = {
 export type AnnounceEntry = {
   endpoints: AnnounceEndpoint[];
   fail_limit: number;
-  source: number;
+  source: string[];
   tier: number;
   trackerid: string;
   url: string;
@@ -281,7 +297,7 @@ export function useRPC<T>(
 ) {
   return useQuery<T>({
     queryFn: () => jsonrpc<T>(method, params),
-    queryKey: [method, params],
+    queryKey: [method],
     ...config,
   });
 }
