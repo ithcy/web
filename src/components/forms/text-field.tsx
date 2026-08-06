@@ -1,7 +1,14 @@
 import { useSelector } from "@tanstack/react-form";
 import { useFieldContext } from "@/hooks/form-context.tsx";
+import type { HTMLInputTypeAttribute } from "react";
 
-export default function TextField({ label }: { label: string }) {
+export default function TextField({
+  label,
+  type,
+}: {
+  label: string;
+  type?: HTMLInputTypeAttribute;
+}) {
   const field = useFieldContext<string>();
 
   const errors = useSelector(field.store, (state) => state.meta.errors);
@@ -11,7 +18,7 @@ export default function TextField({ label }: { label: string }) {
       <label className="label">{label}</label>
 
       <input
-        type="text"
+        type={type ?? "text"}
         className="input"
         value={field.state.value ?? ""}
         onChange={(e) => field.handleChange(e.target.value)}

@@ -1,5 +1,5 @@
 import { useInvoker } from "@/api";
-import { useForm } from "@tanstack/react-form";
+import { useAppForm } from "@/hooks/form";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import clsx from "clsx";
@@ -17,7 +17,7 @@ function RouteComponent() {
       queryClient.invalidateQueries({ queryKey: ["sessions.list"] }),
   });
 
-  const form = useForm({
+  const form = useAppForm({
     defaultValues: {
       name: "",
     },
@@ -48,31 +48,14 @@ function RouteComponent() {
             form.handleSubmit();
           }}
         >
-          <form.Field
+          <form.AppField
             name="name"
-            children={(field) => (
-              <>
-                <label className="label">Name</label>
-                <input
-                  type="text"
-                  className="input"
-                  placeholder="awesome-session-18"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </>
-            )}
+            children={(field) => <field.TextField label="Name" />}
           />
-          <button
-            type="submit"
-            className={clsx([
-              "btn btn-primary",
-              form.state.isSubmitting && "btn-disabled",
-            ])}
-          >
-            Add session
-          </button>
+
+          <form.AppForm>
+            <form.SubmitButton label="Add session" />
+          </form.AppForm>
         </form>
       </div>
     </div>

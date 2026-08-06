@@ -1,38 +1,26 @@
-import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
+import { useInvoker } from "@/api";
+import { useAppForm } from "@/hooks/form";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/setup")({
   component: RouteComponent,
 });
 
-type AuthInitReq = {
-  username: string;
-  password: string;
-};
-
 function RouteComponent() {
-  const authInit = useMutation({
-    mutationKey: ["auth.init"],
-    mutationFn: (init: AuthInitReq) =>
-      fetch("/api/v1/jsonrpc", {
-        method: "POST",
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          method: "auth.init",
-          params: init,
-        }),
-      }).then((r) => r.json()),
-  });
+  const navigate = Route.useNavigate();
 
-  const form = useForm({
+  const authInit = useInvoker("auth.init");
+  const authLogin = useInvoker("auth.login");
+
+  const form = useAppForm({
     defaultValues: {
       username: "",
       password: "",
     },
     onSubmit: async ({ value }) => {
-      const r = await authInit.mutateAsync(value);
-      console.log(r);
+      await authInit.mutateAsync(value);
+      await authLogin.mutateAsync(value);
+      await navigate({ to: "/" });
     },
   });
 
@@ -49,43 +37,21 @@ function RouteComponent() {
           form.handleSubmit();
         }}
       >
-        <fieldset className="fieldset">
-          <form.Field
-            name="username"
-            children={(field) => (
-              <>
-                <label className="label">Username</label>
-                <input
-                  type="text"
-                  className="input"
-                  placeholder="porla-user-ab12"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </>
-            )}
-          />
+        <form.AppField
+          name="username"
+          children={(field) => <field.TextField label="Username" />}
+        />
 
-          <form.Field
-            name="password"
-            children={(field) => (
-              <>
-                <label className="label">Password</label>
-                <input
-                  type="password"
-                  className="input"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </>
-            )}
-          />
-        </fieldset>
-        <button type="submit" className="btn btn-primary">
-          Create user
-        </button>
+        <form.AppField
+          name="password"
+          children={(field) => (
+            <field.TextField label="Password" type="password" />
+          )}
+        />
+
+        <form.AppForm>
+          <form.SubmitButton label="Create user" />
+        </form.AppForm>
       </form>
     </div>
   );
