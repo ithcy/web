@@ -53,24 +53,14 @@ function SessionData({ session }: { session: Session }) {
   const form = useAppForm({
     defaultValues: {
       name: session.name,
-      color:
-        !!session.metadata &&
-        typeof session.metadata === "object" &&
-        "color" in session.metadata &&
-        typeof session.metadata["color"] === "string"
-          ? session.metadata["color"]
-          : "#cccccc",
-      is_default: session.is_default,
+      metadata: session.metadata,
     },
     onSubmit: async ({ value }) => {
-      let metadata = session.metadata as Record<string, unknown>;
-      metadata["color"] = value.color;
-
       await update.mutateAsync({
         id: session.id,
         name: value.name,
-        is_default: value.is_default,
-        metadata,
+        is_default: session.is_default,
+        metadata: value.metadata,
       });
     },
   });
@@ -89,20 +79,9 @@ function SessionData({ session }: { session: Session }) {
           children={(field) => <field.TextField label="Name" />}
         />
 
-        <form.Field
-          name="color"
-          children={(field) => (
-            <div>
-              <label className="label">Color</label>
-              <input
-                type="color"
-                className="size-8 rounded-md cursor-pointer"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-            </div>
-          )}
+        <form.AppField
+          name="metadata.color"
+          children={(field) => <field.ColorField label="Color" />}
         />
 
         <button

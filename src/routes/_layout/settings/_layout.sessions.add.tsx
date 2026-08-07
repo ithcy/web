@@ -2,7 +2,6 @@ import { useInvoker } from "@/api";
 import { useAppForm } from "@/hooks/form";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import clsx from "clsx";
 
 export const Route = createFileRoute("/_layout/settings/_layout/sessions/add")({
   component: RouteComponent,

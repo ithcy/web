@@ -55,6 +55,8 @@ export type TorrentsGet = {
 
 export type InfoHash = [string | null, string | null] | string;
 
+export type Bitfield = [number, string];
+
 export type Torrent = {
   $userdata: {
     category: string | null;
@@ -174,6 +176,11 @@ export type Peer = {
 
 export type TorrentsPeersList = {
   peers: Peer[];
+};
+
+export type TorrentsPiecesGet = {
+  pieces: Bitfield;
+  verified_pieces: Bitfield;
 };
 
 export type AnnounceInfohash = {
@@ -297,7 +304,7 @@ export function useRPC<T>(
 ) {
   return useQuery<T>({
     queryFn: () => jsonrpc<T>(method, params),
-    queryKey: [method],
+    queryKey: [method, params],
     ...config,
   });
 }

@@ -6,10 +6,11 @@ import {
   useInvoker,
 } from "@/api";
 import TorrentDetailsPanel from "@/components/torrent-details-panel";
+import { useForm } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { filesize } from "filesize";
-import { Menu } from "lucide-react";
+import { Menu, SearchIcon } from "lucide-react";
 
 type TorrentFilterStatus =
   | "downloading"
@@ -22,6 +23,7 @@ type TorrentFilterStatus =
 
 type TorrentSearch = {
   page?: number;
+  query?: string;
   session_id?: number;
   status?: TorrentFilterStatus[];
   selected_info_hash?: InfoHash;
@@ -49,10 +51,26 @@ function RouteComponent() {
 
   const pageSize = 50;
 
+  const searchForm = useForm({
+    defaultValues: {
+      query: search.query,
+    },
+    onSubmit: async ({ value }) => {
+      await navigate({
+        to: "/",
+        search: {
+          ...search,
+          query: !value.query?.length ? undefined : value.query,
+        },
+      });
+    },
+  });
+
   const torrents = useRPC<TorrentsList>(
     "torrents.list",
     {
       filters: {
+        query: search.query,
         session_id: search.session_id,
         status: search.status,
       },
@@ -67,7 +85,29 @@ function RouteComponent() {
   return (
     <div className="flex flex-col h-full">
       <div className="bg-base-300 p-3">
-        <input className="input w-full" placeholder="Search" />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            searchForm.handleSubmit();
+          }}
+        >
+          <searchForm.Field
+            name="query"
+            children={(field) => (
+              <label className="input w-full">
+                <SearchIcon className="h-[1em] opacity-50" />
+                <input
+                  className="grow font-mono"
+                  placeholder="Search"
+                  value={field.state.value ?? ""}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  onBlur={field.handleBlur}
+                />
+              </label>
+            )}
+          />
+        </form>
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 bg-base-300">
