@@ -37,7 +37,7 @@ export default function TorrentDetailsPanel({
   const torrentSearch = useSearch({ from: "/_layout/", shouldThrow: false });
 
   return (
-    <div className="h-90 rounded-tl-md">
+    <div className="h-90 flex flex-col">
       <div className="flex justify-between items-center p-1">
         <div role="tablist" className="tabs tabs-box tabs-sm">
           {tabs.map((t) => (
@@ -74,21 +74,23 @@ export default function TorrentDetailsPanel({
         </div>
       </div>
 
-      {torrentSearch?.selected_tab_id === "general" && (
-        <GeneralTab info_hash={info_hash} session_id={session_id} />
-      )}
+      <div className="grow h-full overflow-auto">
+        {torrentSearch?.selected_tab_id === "general" && (
+          <GeneralTab info_hash={info_hash} session_id={session_id} />
+        )}
 
-      {torrentSearch?.selected_tab_id === "files" && (
-        <FilesTab info_hash={info_hash} session_id={session_id} />
-      )}
+        {torrentSearch?.selected_tab_id === "files" && (
+          <FilesTab info_hash={info_hash} session_id={session_id} />
+        )}
 
-      {torrentSearch?.selected_tab_id === "peers" && (
-        <PeersTab info_hash={info_hash} session_id={session_id} />
-      )}
+        {torrentSearch?.selected_tab_id === "peers" && (
+          <PeersTab info_hash={info_hash} session_id={session_id} />
+        )}
 
-      {torrentSearch?.selected_tab_id === "trackers" && (
-        <TrackersTab info_hash={info_hash} session_id={session_id} />
-      )}
+        {torrentSearch?.selected_tab_id === "trackers" && (
+          <TrackersTab info_hash={info_hash} session_id={session_id} />
+        )}
+      </div>
     </div>
   );
 }

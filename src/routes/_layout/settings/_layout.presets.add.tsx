@@ -1,4 +1,5 @@
 import { useInvoker } from "@/api";
+import { useAppForm } from "@/hooks/form";
 import { useForm } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -17,7 +18,7 @@ function RouteComponent() {
       queryClient.invalidateQueries({ queryKey: ["presets.list"] }),
   });
 
-  const form = useForm({
+  const form = useAppForm({
     defaultValues: {
       name: "",
     },
@@ -48,31 +49,14 @@ function RouteComponent() {
             form.handleSubmit();
           }}
         >
-          <form.Field
+          <form.AppField
             name="name"
-            children={(field) => (
-              <>
-                <label className="label">Name</label>
-                <input
-                  type="text"
-                  className="input"
-                  placeholder="long-term-seeding"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </>
-            )}
+            children={(field) => <field.TextField label="Name" />}
           />
-          <button
-            type="submit"
-            className={clsx([
-              "btn btn-primary",
-              form.state.isSubmitting && "btn-disabled",
-            ])}
-          >
-            Add preset
-          </button>
+
+          <form.AppForm>
+            <form.SubmitButton label="Add preset" />
+          </form.AppForm>
         </form>
       </div>
     </div>

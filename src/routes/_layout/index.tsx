@@ -128,6 +128,7 @@ function RouteComponent() {
           />
         )}
       </div>
+
       {search.selected_info_hash && search.selected_session_id && (
         <TorrentDetailsPanel
           info_hash={search.selected_info_hash}

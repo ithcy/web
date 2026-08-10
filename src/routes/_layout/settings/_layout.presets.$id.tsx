@@ -78,6 +78,11 @@ function PresetForm({ preset }: PresetFormProps) {
       />
 
       <form.AppField
+        name="is_default"
+        children={(field) => <field.CheckboxField label="Is default" />}
+      />
+
+      <form.AppField
         name="category"
         children={(field) => <field.TextField label="Category" />}
       />
