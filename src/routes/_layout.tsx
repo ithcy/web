@@ -29,10 +29,10 @@ function SysVersionsLayout() {
 
   return (
     <div className="flex h-full">
-      <div className="bg-base-300 w-64">
+      <div className="bg-base-300 w-64 shrink-0">
         <Sidebar />
       </div>
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         <Outlet />
       </div>
     </div>

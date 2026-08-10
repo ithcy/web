@@ -37,7 +37,7 @@ export default function TorrentDetailsPanel({
   const torrentSearch = useSearch({ from: "/_layout/", shouldThrow: false });
 
   return (
-    <div className="h-90 flex flex-col">
+    <div className="h-90 shrink-0 flex flex-col">
       <div className="flex justify-between items-center p-1">
         <div role="tablist" className="tabs tabs-box tabs-sm">
           {tabs.map((t) => (
@@ -74,7 +74,7 @@ export default function TorrentDetailsPanel({
         </div>
       </div>
 
-      <div className="grow h-full overflow-auto">
+      <div className="flex-1 min-h-0 min-w-0 overflow-auto">
         {torrentSearch?.selected_tab_id === "general" && (
           <GeneralTab info_hash={info_hash} session_id={session_id} />
         )}
