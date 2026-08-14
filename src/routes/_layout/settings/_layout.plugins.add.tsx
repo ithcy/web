@@ -15,8 +15,7 @@ function RouteComponent() {
     },
     onSubmit: async ({ value }) => {
       const p = await add.mutateAsync({
-        type: "path",
-        data: value.path,
+        path: value.path,
       });
 
       console.log(p);

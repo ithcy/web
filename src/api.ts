@@ -69,6 +69,7 @@ export type Torrent = {
   all_time_download: number;
   all_time_upload: number;
   completed_time: number;
+  current_tracker: string;
   download_payload_rate: number;
   download_rate: number;
   errc: ErrC | null;
@@ -97,6 +98,15 @@ export type Torrent = {
   total_wanted_done: number;
   upload_payload_rate: number;
   upload_rate: number;
+};
+
+export type PluginsGet = {
+  plugin: {
+    id: number;
+    path: string;
+    config: string | null;
+    metadata: Record<string, unknown>;
+  };
 };
 
 export type PluginsList = {

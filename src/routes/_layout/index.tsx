@@ -5,12 +5,14 @@ import {
   type Torrent,
   useInvoker,
 } from "@/api";
+import { TorrentListColumns } from "@/components/lists/torrents";
 import TorrentDetailsPanel from "@/components/torrent-details-panel";
 import { useForm } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { filesize } from "filesize";
 import { Menu, SearchIcon } from "lucide-react";
+import { useState } from "react";
 
 type TorrentFilterStatus =
   | "downloading"
@@ -178,6 +180,10 @@ function TorrentsTable({ torrents }: TorrentsTableProps) {
   const search = Route.useSearch();
   const queryClient = useQueryClient();
 
+  const userColumns = useRPC<any>("kv.get", {
+    keys: ["webui.lists.torrents.cols"],
+  });
+
   const remove = useInvoker("torrents.remove", {
     onSuccess: () =>
       queryClient.invalidateQueries({
@@ -185,61 +191,51 @@ function TorrentsTable({ torrents }: TorrentsTableProps) {
       }),
   });
 
+  const torrentsColumns = TorrentListColumns();
+
+  if (userColumns.isLoading || !userColumns.data) {
+    return <>loading</>;
+  }
+
+  const isStringArray = (v: unknown): v is string[] =>
+    Array.isArray(v) && v.every((x) => typeof x === "string");
+
+  const knownCols = new Set(Object.keys(torrentsColumns));
+  const raw = userColumns.data.values["webui.lists.torrents.cols"];
+
+  const selectedCols: (keyof typeof torrentsColumns)[] =
+    isStringArray(raw) && raw.length
+      ? (raw.filter((c) =>
+          knownCols.has(c),
+        ) as (keyof typeof torrentsColumns)[])
+      : (
+          Object.keys(torrentsColumns) as (keyof typeof torrentsColumns)[]
+        ).filter((c) => torrentsColumns[c].default);
+
   return (
     <table className="table table-zebra table-fixed">
       <thead>
         <tr>
-          <th className="text-right w-4">#</th>
-          <th className="">Name</th>
-          <th className="w-32">Size</th>
-          <th className="w-32">Progress</th>
-          <th className="w-32 text-right">DL</th>
-          <th className="w-32 text-right">UL</th>
+          {selectedCols.map((col) => (
+            <th key={col} className={torrentsColumns[col].headerClassNames}>
+              {torrentsColumns[col].title}
+            </th>
+          ))}
           <th className="w-4"></th>
         </tr>
       </thead>
       <tbody>
         {torrents.map((t) => (
           <tr key={`${t.info_hash[0]}`}>
-            <td className="text-right text-gray-300">
-              {t.queue_position < 0 ? (
-                <span>-</span>
-              ) : (
-                `${t.queue_position + 1}`
-              )}
-            </td>
-            <td className="overflow-hidden text-ellipsis whitespace-nowrap">
-              <Link
-                to="/"
-                search={{
-                  ...search,
-                  selected_info_hash: t.info_hash,
-                  selected_session_id: search.session_id,
-                  selected_tab_id: search.selected_tab_id || "general",
-                }}
-                className="hover:underline"
+            {selectedCols.map((col) => (
+              <td
+                key={`td_${col}`}
+                className={torrentsColumns[col].columnClassNames}
               >
-                {t.name}
-              </Link>
-            </td>
-            <td className="text-gray-300">{filesize(t.total_wanted)}</td>
-            <td>
-              <progress
-                className="progress w-full"
-                value={t.progress}
-                max={1}
-              ></progress>
-            </td>
-            <td className="text-right">
-              {t.download_payload_rate > 0
-                ? `${filesize(t.download_payload_rate)}/s`
-                : "-"}
-            </td>
-            <td className="text-right">
-              {t.upload_payload_rate > 0
-                ? `${filesize(t.upload_payload_rate)}/s`
-                : "-"}
-            </td>
+                {torrentsColumns[col].data(t)}
+              </td>
+            ))}
+
             <td className="text-right">
               <button
                 className="btn btn-xs btn-square"

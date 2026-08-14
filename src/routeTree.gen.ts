@@ -16,10 +16,14 @@ import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutAddRouteImport } from './routes/_layout/add'
 import { Route as LayoutSettingsLayoutRouteImport } from './routes/_layout/settings/_layout'
 import { Route as LayoutSettingsLayoutIndexRouteImport } from './routes/_layout/settings/_layout.index'
+import { Route as LayoutSettingsLayoutWebuiRouteImport } from './routes/_layout/settings/_layout.webui'
+import { Route as LayoutSettingsLayoutViewsRouteImport } from './routes/_layout/settings/_layout.views'
+import { Route as LayoutSettingsLayoutMmdbRouteImport } from './routes/_layout/settings/_layout.mmdb'
 import { Route as LayoutSettingsLayoutSessionsAddRouteImport } from './routes/_layout/settings/_layout.sessions.add'
 import { Route as LayoutSettingsLayoutSessionsIdRouteImport } from './routes/_layout/settings/_layout.sessions.$id'
 import { Route as LayoutSettingsLayoutPresetsAddRouteImport } from './routes/_layout/settings/_layout.presets.add'
 import { Route as LayoutSettingsLayoutPresetsIdRouteImport } from './routes/_layout/settings/_layout.presets.$id'
+import { Route as LayoutSettingsLayoutPluginsInstallRouteImport } from './routes/_layout/settings/_layout/plugins.install'
 import { Route as LayoutSettingsLayoutPluginsAddRouteImport } from './routes/_layout/settings/_layout.plugins.add'
 import { Route as LayoutSettingsLayoutPluginsIdRouteImport } from './routes/_layout/settings/_layout.plugins.$id'
 
@@ -58,6 +62,24 @@ const LayoutSettingsLayoutIndexRoute =
     path: '/',
     getParentRoute: () => LayoutSettingsLayoutRoute,
   } as any)
+const LayoutSettingsLayoutWebuiRoute =
+  LayoutSettingsLayoutWebuiRouteImport.update({
+    id: '/webui',
+    path: '/webui',
+    getParentRoute: () => LayoutSettingsLayoutRoute,
+  } as any)
+const LayoutSettingsLayoutViewsRoute =
+  LayoutSettingsLayoutViewsRouteImport.update({
+    id: '/views',
+    path: '/views',
+    getParentRoute: () => LayoutSettingsLayoutRoute,
+  } as any)
+const LayoutSettingsLayoutMmdbRoute =
+  LayoutSettingsLayoutMmdbRouteImport.update({
+    id: '/mmdb',
+    path: '/mmdb',
+    getParentRoute: () => LayoutSettingsLayoutRoute,
+  } as any)
 const LayoutSettingsLayoutSessionsAddRoute =
   LayoutSettingsLayoutSessionsAddRouteImport.update({
     id: '/sessions/add',
@@ -82,6 +104,12 @@ const LayoutSettingsLayoutPresetsIdRoute =
     path: '/presets/$id',
     getParentRoute: () => LayoutSettingsLayoutRoute,
   } as any)
+const LayoutSettingsLayoutPluginsInstallRoute =
+  LayoutSettingsLayoutPluginsInstallRouteImport.update({
+    id: '/plugins/install',
+    path: '/plugins/install',
+    getParentRoute: () => LayoutSettingsLayoutRoute,
+  } as any)
 const LayoutSettingsLayoutPluginsAddRoute =
   LayoutSettingsLayoutPluginsAddRouteImport.update({
     id: '/plugins/add',
@@ -101,9 +129,13 @@ export interface FileRoutesByFullPath {
   '/setup': typeof SetupRoute
   '/add': typeof LayoutAddRoute
   '/settings': typeof LayoutSettingsLayoutRouteWithChildren
+  '/settings/mmdb': typeof LayoutSettingsLayoutMmdbRoute
+  '/settings/views': typeof LayoutSettingsLayoutViewsRoute
+  '/settings/webui': typeof LayoutSettingsLayoutWebuiRoute
   '/settings/': typeof LayoutSettingsLayoutIndexRoute
   '/settings/plugins/$id': typeof LayoutSettingsLayoutPluginsIdRoute
   '/settings/plugins/add': typeof LayoutSettingsLayoutPluginsAddRoute
+  '/settings/plugins/install': typeof LayoutSettingsLayoutPluginsInstallRoute
   '/settings/presets/$id': typeof LayoutSettingsLayoutPresetsIdRoute
   '/settings/presets/add': typeof LayoutSettingsLayoutPresetsAddRoute
   '/settings/sessions/$id': typeof LayoutSettingsLayoutSessionsIdRoute
@@ -114,9 +146,13 @@ export interface FileRoutesByTo {
   '/setup': typeof SetupRoute
   '/add': typeof LayoutAddRoute
   '/': typeof LayoutIndexRoute
+  '/settings/mmdb': typeof LayoutSettingsLayoutMmdbRoute
+  '/settings/views': typeof LayoutSettingsLayoutViewsRoute
+  '/settings/webui': typeof LayoutSettingsLayoutWebuiRoute
   '/settings': typeof LayoutSettingsLayoutIndexRoute
   '/settings/plugins/$id': typeof LayoutSettingsLayoutPluginsIdRoute
   '/settings/plugins/add': typeof LayoutSettingsLayoutPluginsAddRoute
+  '/settings/plugins/install': typeof LayoutSettingsLayoutPluginsInstallRoute
   '/settings/presets/$id': typeof LayoutSettingsLayoutPresetsIdRoute
   '/settings/presets/add': typeof LayoutSettingsLayoutPresetsAddRoute
   '/settings/sessions/$id': typeof LayoutSettingsLayoutSessionsIdRoute
@@ -130,9 +166,13 @@ export interface FileRoutesById {
   '/_layout/add': typeof LayoutAddRoute
   '/_layout/': typeof LayoutIndexRoute
   '/_layout/settings/_layout': typeof LayoutSettingsLayoutRouteWithChildren
+  '/_layout/settings/_layout/mmdb': typeof LayoutSettingsLayoutMmdbRoute
+  '/_layout/settings/_layout/views': typeof LayoutSettingsLayoutViewsRoute
+  '/_layout/settings/_layout/webui': typeof LayoutSettingsLayoutWebuiRoute
   '/_layout/settings/_layout/': typeof LayoutSettingsLayoutIndexRoute
   '/_layout/settings/_layout/plugins/$id': typeof LayoutSettingsLayoutPluginsIdRoute
   '/_layout/settings/_layout/plugins/add': typeof LayoutSettingsLayoutPluginsAddRoute
+  '/_layout/settings/_layout/plugins/install': typeof LayoutSettingsLayoutPluginsInstallRoute
   '/_layout/settings/_layout/presets/$id': typeof LayoutSettingsLayoutPresetsIdRoute
   '/_layout/settings/_layout/presets/add': typeof LayoutSettingsLayoutPresetsAddRoute
   '/_layout/settings/_layout/sessions/$id': typeof LayoutSettingsLayoutSessionsIdRoute
@@ -146,9 +186,13 @@ export interface FileRouteTypes {
     | '/setup'
     | '/add'
     | '/settings'
+    | '/settings/mmdb'
+    | '/settings/views'
+    | '/settings/webui'
     | '/settings/'
     | '/settings/plugins/$id'
     | '/settings/plugins/add'
+    | '/settings/plugins/install'
     | '/settings/presets/$id'
     | '/settings/presets/add'
     | '/settings/sessions/$id'
@@ -159,9 +203,13 @@ export interface FileRouteTypes {
     | '/setup'
     | '/add'
     | '/'
+    | '/settings/mmdb'
+    | '/settings/views'
+    | '/settings/webui'
     | '/settings'
     | '/settings/plugins/$id'
     | '/settings/plugins/add'
+    | '/settings/plugins/install'
     | '/settings/presets/$id'
     | '/settings/presets/add'
     | '/settings/sessions/$id'
@@ -174,9 +222,13 @@ export interface FileRouteTypes {
     | '/_layout/add'
     | '/_layout/'
     | '/_layout/settings/_layout'
+    | '/_layout/settings/_layout/mmdb'
+    | '/_layout/settings/_layout/views'
+    | '/_layout/settings/_layout/webui'
     | '/_layout/settings/_layout/'
     | '/_layout/settings/_layout/plugins/$id'
     | '/_layout/settings/_layout/plugins/add'
+    | '/_layout/settings/_layout/plugins/install'
     | '/_layout/settings/_layout/presets/$id'
     | '/_layout/settings/_layout/presets/add'
     | '/_layout/settings/_layout/sessions/$id'
@@ -240,6 +292,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutSettingsLayoutIndexRouteImport
       parentRoute: typeof LayoutSettingsLayoutRoute
     }
+    '/_layout/settings/_layout/webui': {
+      id: '/_layout/settings/_layout/webui'
+      path: '/webui'
+      fullPath: '/settings/webui'
+      preLoaderRoute: typeof LayoutSettingsLayoutWebuiRouteImport
+      parentRoute: typeof LayoutSettingsLayoutRoute
+    }
+    '/_layout/settings/_layout/views': {
+      id: '/_layout/settings/_layout/views'
+      path: '/views'
+      fullPath: '/settings/views'
+      preLoaderRoute: typeof LayoutSettingsLayoutViewsRouteImport
+      parentRoute: typeof LayoutSettingsLayoutRoute
+    }
+    '/_layout/settings/_layout/mmdb': {
+      id: '/_layout/settings/_layout/mmdb'
+      path: '/mmdb'
+      fullPath: '/settings/mmdb'
+      preLoaderRoute: typeof LayoutSettingsLayoutMmdbRouteImport
+      parentRoute: typeof LayoutSettingsLayoutRoute
+    }
     '/_layout/settings/_layout/sessions/add': {
       id: '/_layout/settings/_layout/sessions/add'
       path: '/sessions/add'
@@ -268,6 +341,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutSettingsLayoutPresetsIdRouteImport
       parentRoute: typeof LayoutSettingsLayoutRoute
     }
+    '/_layout/settings/_layout/plugins/install': {
+      id: '/_layout/settings/_layout/plugins/install'
+      path: '/plugins/install'
+      fullPath: '/settings/plugins/install'
+      preLoaderRoute: typeof LayoutSettingsLayoutPluginsInstallRouteImport
+      parentRoute: typeof LayoutSettingsLayoutRoute
+    }
     '/_layout/settings/_layout/plugins/add': {
       id: '/_layout/settings/_layout/plugins/add'
       path: '/plugins/add'
@@ -286,9 +366,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface LayoutSettingsLayoutRouteChildren {
+  LayoutSettingsLayoutMmdbRoute: typeof LayoutSettingsLayoutMmdbRoute
+  LayoutSettingsLayoutViewsRoute: typeof LayoutSettingsLayoutViewsRoute
+  LayoutSettingsLayoutWebuiRoute: typeof LayoutSettingsLayoutWebuiRoute
   LayoutSettingsLayoutIndexRoute: typeof LayoutSettingsLayoutIndexRoute
   LayoutSettingsLayoutPluginsIdRoute: typeof LayoutSettingsLayoutPluginsIdRoute
   LayoutSettingsLayoutPluginsAddRoute: typeof LayoutSettingsLayoutPluginsAddRoute
+  LayoutSettingsLayoutPluginsInstallRoute: typeof LayoutSettingsLayoutPluginsInstallRoute
   LayoutSettingsLayoutPresetsIdRoute: typeof LayoutSettingsLayoutPresetsIdRoute
   LayoutSettingsLayoutPresetsAddRoute: typeof LayoutSettingsLayoutPresetsAddRoute
   LayoutSettingsLayoutSessionsIdRoute: typeof LayoutSettingsLayoutSessionsIdRoute
@@ -296,9 +380,14 @@ interface LayoutSettingsLayoutRouteChildren {
 }
 
 const LayoutSettingsLayoutRouteChildren: LayoutSettingsLayoutRouteChildren = {
+  LayoutSettingsLayoutMmdbRoute: LayoutSettingsLayoutMmdbRoute,
+  LayoutSettingsLayoutViewsRoute: LayoutSettingsLayoutViewsRoute,
+  LayoutSettingsLayoutWebuiRoute: LayoutSettingsLayoutWebuiRoute,
   LayoutSettingsLayoutIndexRoute: LayoutSettingsLayoutIndexRoute,
   LayoutSettingsLayoutPluginsIdRoute: LayoutSettingsLayoutPluginsIdRoute,
   LayoutSettingsLayoutPluginsAddRoute: LayoutSettingsLayoutPluginsAddRoute,
+  LayoutSettingsLayoutPluginsInstallRoute:
+    LayoutSettingsLayoutPluginsInstallRoute,
   LayoutSettingsLayoutPresetsIdRoute: LayoutSettingsLayoutPresetsIdRoute,
   LayoutSettingsLayoutPresetsAddRoute: LayoutSettingsLayoutPresetsAddRoute,
   LayoutSettingsLayoutSessionsIdRoute: LayoutSettingsLayoutSessionsIdRoute,

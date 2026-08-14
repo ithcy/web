@@ -14,6 +14,13 @@ function RouteComponent() {
   return (
     <div className="w-full h-full flex">
       <div className="w-64">
+        <ul className="menu w-full">
+          <li>
+            <Link to="/settings/mmdb">MMDB</Link>
+            <Link to="/settings/views">Views</Link>
+            <Link to="/settings/webui">Web UI</Link>
+          </li>
+        </ul>
         <SessionsMenu />
         <PresetsMenu />
         <PluginsMenu />
@@ -112,8 +119,8 @@ function PluginsMenu() {
         </li>
       ))}
       <li>
-        <Link to="/settings/plugins/add" className="btn btn-xs">
-          Add plugin
+        <Link to="/settings/plugins/install" className="btn btn-xs">
+          Install plugin
         </Link>
       </li>
     </ul>
