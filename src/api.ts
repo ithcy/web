@@ -162,7 +162,7 @@ export type Preset = {
 export type TorrentFile = {
   absolute_path: boolean;
   flags: string[];
-  name: string;
+  index: number;
   path: string;
   size: number;
   symlink: boolean;
@@ -170,6 +170,10 @@ export type TorrentFile = {
 
 export type TorrentsFilesList = {
   files: TorrentFile[];
+};
+
+export type TorrentsFilesPriorities = {
+  priorities: number[];
 };
 
 export type TorrentsFilesProgress = {
@@ -180,7 +184,7 @@ export type Peer = {
   client: string;
   connection_type: string;
   flags: string[];
-  ip: [string, number];
+  remote_endpoint: [string, number];
   source: string[];
 };
 

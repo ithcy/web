@@ -6,6 +6,9 @@ import {
   useInvoker,
 } from "@/api";
 import { TorrentListColumns } from "@/components/lists/torrents";
+import { useModal } from "@/components/modal";
+import MigrateTorrentModal from "@/components/modals/torrent-migrate";
+import RemoveTorrentModal from "@/components/modals/torrent-remove";
 import TorrentDetailsPanel from "@/components/torrent-details-panel";
 import { useForm } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
@@ -180,6 +183,8 @@ function TorrentsTable({ torrents }: TorrentsTableProps) {
   const search = Route.useSearch();
   const queryClient = useQueryClient();
 
+  const modal = useModal();
+
   const userColumns = useRPC<any>("kv.get", {
     keys: ["webui.lists.torrents.cols"],
   });
@@ -254,13 +259,25 @@ function TorrentsTable({ torrents }: TorrentsTableProps) {
                 <li>
                   <button
                     onClick={async () => {
-                      await remove.mutateAsync({
+                      await modal.show(MigrateTorrentModal, {
                         info_hash: t.info_hash,
-                        session_id: search.session_id,
-                        remove_data: false,
+                        session_id: search.session_id!,
+                      });
+                    }}
+                  >
+                    Migrate
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={async () => {
+                      const didRemove = await modal.show(RemoveTorrentModal, {
+                        info_hash: t.info_hash,
+                        session_id: search.session_id!,
                       });
 
                       if (
+                        didRemove &&
                         search.selected_info_hash &&
                         search.selected_session_id &&
                         search.selected_info_hash[0] == t.info_hash[0] &&

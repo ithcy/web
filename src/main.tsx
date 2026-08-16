@@ -8,6 +8,7 @@ import "./index.css";
 import { routeTree } from "./routeTree.gen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthError } from "@/api";
+import { ModalProvider } from "./components/modal";
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -43,7 +44,9 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <ModalProvider>
+          <RouterProvider router={router} />
+        </ModalProvider>
       </QueryClientProvider>
     </StrictMode>,
   );

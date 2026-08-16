@@ -39,7 +39,7 @@ export default function PeersTab({ info_hash, session_id }: PeersTabProps) {
       return;
     }
 
-    const endpoints = peers.data.peers.map((p) => p.ip[0]);
+    const endpoints = peers.data.peers.map((p) => p.remote_endpoint[0]);
 
     mmdb
       .mutateAsync({ values: endpoints })
@@ -50,12 +50,16 @@ export default function PeersTab({ info_hash, session_id }: PeersTabProps) {
     <table className="table table-sm">
       <tbody>
         {peers.data?.peers.map((p) => (
-          <tr key={`peer_${p.ip[0].replace(":", "_")}_${p.ip[1]}`}>
-            <td>{p.ip[0]}</td>
+          <tr
+            key={`peer_${p.remote_endpoint[0].replace(":", "_")}_${p.remote_endpoint[1]}`}
+          >
+            <td>{p.remote_endpoint[0]}</td>
             {mmdbEnabled && mmdbEndpoints && (
               <td>
-                {p.ip[0] in mmdbEndpoints && (
-                  <span>{mmdbEndpoints[p.ip[0]].country?.iso_code}</span>
+                {p.remote_endpoint[0] in mmdbEndpoints && (
+                  <span>
+                    {mmdbEndpoints[p.remote_endpoint[0]].country?.iso_code}
+                  </span>
                 )}
               </td>
             )}
