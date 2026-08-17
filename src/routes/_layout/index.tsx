@@ -8,14 +8,12 @@ import {
 import { TorrentListColumns } from "@/components/lists/torrents";
 import { useModal } from "@/components/modal";
 import MigrateTorrentModal from "@/components/modals/torrent-migrate";
+import MoveTorrentModal from "@/components/modals/torrent-move";
 import RemoveTorrentModal from "@/components/modals/torrent-remove";
 import TorrentDetailsPanel from "@/components/torrent-details-panel";
 import { useForm } from "@tanstack/react-form";
-import { useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { filesize } from "filesize";
+import { createFileRoute } from "@tanstack/react-router";
 import { Menu, SearchIcon } from "lucide-react";
-import { useState } from "react";
 
 type TorrentFilterStatus =
   | "downloading"
@@ -181,19 +179,14 @@ type TorrentsTableProps = {
 function TorrentsTable({ torrents }: TorrentsTableProps) {
   const navigate = Route.useNavigate();
   const search = Route.useSearch();
-  const queryClient = useQueryClient();
+
+  const queueBottom = useInvoker("torrents.queue.bottom");
+  const queueDown = useInvoker("torrents.queue.down");
 
   const modal = useModal();
 
   const userColumns = useRPC<any>("kv.get", {
     keys: ["webui.lists.torrents.cols"],
-  });
-
-  const remove = useInvoker("torrents.remove", {
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: ["sessions.list", "torrents.count", "torrents.list"],
-      }),
   });
 
   const torrentsColumns = TorrentListColumns();
@@ -267,6 +260,49 @@ function TorrentsTable({ torrents }: TorrentsTableProps) {
                   >
                     Migrate
                   </button>
+                </li>
+                <li>
+                  <button
+                    onClick={async () => {
+                      await modal.show(MoveTorrentModal, {
+                        info_hash: t.info_hash,
+                        session_id: search.session_id!,
+                      });
+                    }}
+                  >
+                    Move
+                  </button>
+                </li>
+                <li>
+                  <details>
+                    <summary>Queuing</summary>
+                    <ul>
+                      <li>
+                        <button
+                          onClick={() =>
+                            queueBottom.mutateAsync({
+                              info_hash: t.info_hash,
+                              session_id: search.session_id!,
+                            })
+                          }
+                        >
+                          Bottom
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() =>
+                            queueDown.mutateAsync({
+                              info_hash: t.info_hash,
+                              session_id: search.session_id!,
+                            })
+                          }
+                        >
+                          Down
+                        </button>
+                      </li>
+                    </ul>
+                  </details>
                 </li>
                 <li>
                   <button
