@@ -76,6 +76,12 @@ export default function AddTorrentModal(props: AddTorrentModalProps) {
 
   const defaultPresetKey = findDefaultPresetKey(presets);
 
+  // $order is null unless the server has sort_presets_alphabetically = false;
+  // in that case every preset gets it, so this sort is a no-op stable sort
+  // (ties all resolve to 0) that otherwise preserves natural order.
+  const presetKeys = Object.keys(presets)
+    .sort((a, b) => (presets[a].$order ?? 0) - (presets[b].$order ?? 0));
+
   const fsSpace             = useInvoker<any>("fs.space");
   const torrentsAdd         = useInvoker<InfoHash>("torrents.add");
   const [ error, setError ] = useState<any>();
@@ -243,7 +249,7 @@ export default function AddTorrentModal(props: AddTorrentModalProps) {
                             }
                           }}
                         >
-                          { Object.keys(presets).map(p => (
+                          { presetKeys.map(p => (
                             <option key={p} value={p}>{p}</option>
                           ))}
                         </Select>

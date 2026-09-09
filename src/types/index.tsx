@@ -11,6 +11,7 @@ export type Preset = {
   save_path: string | null;
   $hidden: boolean | null;
   $default: boolean | null;
+  $order: number | null;
 };
 
 export type WebUIConfig = {
