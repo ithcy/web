@@ -51,9 +51,13 @@ type AddTorrentModalProps = {
   isOpen: boolean;
   onClose: (hashes?: InfoHash[]) => void;
   presets: PresetsList;
+  defaultTab?: "torrent-file" | "magnet-link";
 }
 
 export default function AddTorrentModal(props: AddTorrentModalProps) {
+  const initialType = props.defaultTab === "magnet-link" ? "magnet_uri" : "torrent";
+  const initialTabIndex = initialType === "magnet_uri" ? 1 : 0;
+
   const presets = Object.keys(props.presets)
     .filter(presetName => !props.presets[presetName]["$hidden"])
     .reduce((prev, curr) => {
@@ -91,7 +95,7 @@ export default function AddTorrentModal(props: AddTorrentModalProps) {
       <ModalContent>
         <Formik
           initialValues={{
-            type: "torrent",
+            type: initialType,
             magnet_uri: "",
             preset: "default" in presets ? "default" : "",
             save_path: "default" in presets
@@ -155,6 +159,7 @@ export default function AddTorrentModal(props: AddTorrentModalProps) {
               <ModalCloseButton />
               <ModalBody>
                 <Tabs
+                  defaultIndex={initialTabIndex}
                   onChange={index => {
                     setFieldValue("type", index === 0 ? "torrent" : "magnet_uri");
                   }}

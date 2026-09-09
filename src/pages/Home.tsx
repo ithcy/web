@@ -6,7 +6,7 @@ import { useInvoker, useRPC } from "../services/jsonrpc";
 import AddTorrentModal from "../components/AddTorrentModal";
 import MoveTorrentModal from "../components/MoveTorrentModal";
 import { MdAddBox } from "react-icons/md";
-import { ITorrentsList, PresetsList, Torrent } from "../types";
+import { ITorrentsList, PresetsList, Torrent, WebUIConfig } from "../types";
 import TorrentPropertiesModal from "../components/TorrentPropertiesModal";
 import TorrentsList from "../components/TorrentsList";
 import useTorrentsFilter from "../contexts/TorrentsFilterContext";
@@ -37,6 +37,10 @@ export default function Home() {
   const {
     data: presets
   } = useRPC<PresetsList>("presets.list");
+
+  const {
+    data: webuiConfig
+  } = useRPC<WebUIConfig>("webui.config");
 
   const torrentsMove = useInvoker<void>("torrents.move");
   const torrentsPause = useInvoker<void>("torrents.pause");
@@ -99,6 +103,7 @@ export default function Home() {
           await mutate();
         }}
         presets={presets}
+        defaultTab={webuiConfig?.default_add_torrent_tab ?? "torrent-file"}
       />
 
       <MoveTorrentModal
