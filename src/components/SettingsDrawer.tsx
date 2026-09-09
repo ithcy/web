@@ -355,7 +355,7 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
     <Drawer
       isOpen={props.isOpen}
       onClose={props.onClose}
-      size={"lg"}
+      size={"xl"}
     >
       <DrawerOverlay />
       <DrawerContent>
