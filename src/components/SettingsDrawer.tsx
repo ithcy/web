@@ -59,7 +59,7 @@ type SettingsFormProps = {
 function SettingsForm(props: SettingsFormProps) {
   const { onSubmitted, onSubmitting, settings } = props;
 
-  const sessionSettingsUpdate = useInvoker<void>("session.settings.update");
+  const sessionSettingsUpdate = useInvoker<void>("sessions.settings.update");
 
   return (
     <Formik
