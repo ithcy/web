@@ -12,6 +12,10 @@ export type Preset = {
   $hidden: boolean | null;
 };
 
+export type WebUIConfig = {
+  default_add_torrent_tab: "torrent-file" | "magnet-link";
+};
+
 export type Torrent = {
   all_time_download: number;
   all_time_upload: number;
