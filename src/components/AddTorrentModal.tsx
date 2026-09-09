@@ -47,6 +47,15 @@ const AddTorrentSchema = Yup.object().shape({
     .required()
 });
 
+const findDefaultPresetKey = (list: PresetsList): string | undefined => {
+  const flagged = Object.keys(list).find(k => list[k].$default);
+  if (flagged) return flagged;
+
+  // Backwards compat: a preset literally named 'default' is the default
+  // if none is explicitly flagged with $default.
+  return "default" in list ? "default" : undefined;
+}
+
 type AddTorrentModalProps = {
   isOpen: boolean;
   onClose: (hashes?: InfoHash[]) => void;
@@ -65,6 +74,8 @@ export default function AddTorrentModal(props: AddTorrentModalProps) {
       return prev;
     }, {} as PresetsList);
 
+  const defaultPresetKey = findDefaultPresetKey(presets);
+
   const fsSpace             = useInvoker<any>("fs.space");
   const torrentsAdd         = useInvoker<InfoHash>("torrents.add");
   const [ error, setError ] = useState<any>();
@@ -80,8 +91,9 @@ export default function AddTorrentModal(props: AddTorrentModalProps) {
   }, [path]);
 
   useEffect(() => {
-    if (props.presets.default && props.presets.default.save_path) {
-      setPath(() => props.presets.default.save_path!);
+    const key = findDefaultPresetKey(props.presets);
+    if (key && props.presets[key].save_path) {
+      setPath(() => props.presets[key].save_path!);
     }
   }, []);
 
@@ -97,9 +109,9 @@ export default function AddTorrentModal(props: AddTorrentModalProps) {
           initialValues={{
             type: initialType,
             magnet_uri: "",
-            preset: "default" in presets ? "default" : "",
-            save_path: "default" in presets
-              ? presets.default.save_path
+            preset: defaultPresetKey ?? "",
+            save_path: defaultPresetKey
+              ? presets[defaultPresetKey].save_path
               : "",
             ti: []
           }}
