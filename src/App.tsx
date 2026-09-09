@@ -9,7 +9,7 @@ import prefixPath from './base';
 import AppErrorModal from './components/AppErrorModal';
 import Query from './components/Query';
 import SettingsDrawer from './components/SettingsDrawer';
-import useAuth from './contexts/auth';
+import { clearStoredAuth } from './contexts/auth';
 import useNinja from './contexts/ninja';
 import { AuthError, useRPC } from './services/jsonrpc';
 
@@ -28,6 +28,7 @@ function AuthApp() {
   const { isNinja, toggleNinja } = useNinja();
 
   if (error && error instanceof AuthError) {
+    clearStoredAuth();
     return <Navigate to="/login" />
   }
 
@@ -143,7 +144,6 @@ function AuthApp() {
 }
 
 export default function App() {
-  const { user } = useAuth();
   const [status, setStatus] = useState<string | undefined>();
 
   useEffect(() => {
@@ -160,10 +160,6 @@ export default function App() {
 
   if (status === "setup") {
     return <Navigate to={"/setup"} />
-  }
-
-  if (!user) {
-    return <Navigate to={"/login"} />
   }
 
   return <AuthApp />
