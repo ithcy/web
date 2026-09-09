@@ -10,6 +10,7 @@ export type PresetsList = {
 export type Preset = {
   save_path: string | null;
   $hidden: boolean | null;
+  $default: boolean | null;
 };
 
 export type Torrent = {
