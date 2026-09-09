@@ -84,8 +84,7 @@ function AuthApp() {
                 aria-label="Settings"
                 icon={<MdSettings />}
                 variant={"link"}
-                as={NavLink}
-                to="/settings"
+                onClick={() => setShowSettings(true)}
               />
             </Flex>
           </Flex>
