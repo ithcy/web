@@ -214,6 +214,7 @@ export default function AddTorrentModal(props: AddTorrentModalProps) {
                       <FormControl mb={3}>
                         <FormLabel>Preset</FormLabel>
                         <Select
+                          value={values.preset}
                           onChange={e => {
                             setFieldValue("preset", e.target.value);
 
