@@ -10,6 +10,8 @@ import ProxySettingsTab from "./settings/ProxySettingsTab";
 import QueueingSettingsTab from "./settings/QueueingSettingsTab";
 import ConnectionSettingsTab from "./settings/NetworkSettingsTab";
 import DiskIoSettingsTab from "./settings/DiskIoSettingsTab";
+import LibtorrentSettingsTab from "./settings/LibtorrentSettingsTab";
+import WebUiSettingsTab from "./settings/WebUiSettingsTab";
 
 type SettingsDrawerProps = {
   isOpen: boolean;
@@ -103,6 +105,8 @@ function SettingsForm(props: SettingsFormProps) {
             <Tab>Network</Tab>
             <Tab>Proxy</Tab>
             <Tab>Queueing</Tab>
+            <Tab>Libtorrent</Tab>
+            <Tab>Web UI</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
@@ -119,6 +123,12 @@ function SettingsForm(props: SettingsFormProps) {
             </TabPanel>
             <TabPanel>
               <QueueingSettingsTab />
+            </TabPanel>
+            <TabPanel>
+              <LibtorrentSettingsTab settings={settings} />
+            </TabPanel>
+            <TabPanel>
+              <WebUiSettingsTab />
             </TabPanel>
           </TabPanels>
         </Tabs>
@@ -193,7 +203,149 @@ export default function SettingsDrawer(props: SettingsDrawerProps) {
       "torrent_connect_boost",
       "unchoke_slots_limit",
       "use_parole_mode",
-      "whole_pieces_threshold"
+      "whole_pieces_threshold",
+
+      // Libtorrent tab (everything not already covered by the tabs above)
+      "active_dht_limit",
+      "active_lsd_limit",
+      "active_tracker_limit",
+      "aio_threads",
+      "allow_i2p_mixed",
+      "allow_idna",
+      "allowed_enc_level",
+      "always_send_user_agent",
+      "announce_crypto_support",
+      "announce_ip",
+      "announce_to_all_tiers",
+      "anonymous_mode",
+      "apply_ip_filter_to_trackers",
+      "auto_manage_startup",
+      "auto_sequential",
+      "ban_web_seeds",
+      "close_file_interval",
+      "close_redundant_connections",
+      "connect_seed_every_n_download",
+      "connections_slack",
+      "dht_aggressive_lookups",
+      "dht_announce_interval",
+      "dht_block_ratelimit",
+      "dht_block_timeout",
+      "dht_bootstrap_nodes",
+      "dht_enforce_node_id",
+      "dht_extended_routing_table",
+      "dht_ignore_dark_internet",
+      "dht_item_lifetime",
+      "dht_max_dht_items",
+      "dht_max_fail_count",
+      "dht_max_infohashes_sample_count",
+      "dht_max_peers",
+      "dht_max_peers_reply",
+      "dht_max_torrent_search_reply",
+      "dht_max_torrents",
+      "dht_prefer_verified_node_ids",
+      "dht_privacy_lookups",
+      "dht_read_only",
+      "dht_restrict_routing_ips",
+      "dht_restrict_search_ips",
+      "dht_sample_infohashes_interval",
+      "dht_search_branching",
+      "dht_upload_rate_limit",
+      "disable_hash_checks",
+      "disk_io_read_mode",
+      "disk_io_write_mode",
+      "download_rate_limit",
+      "enable_dht",
+      "enable_incoming_tcp",
+      "enable_incoming_utp",
+      "enable_ip_notifier",
+      "enable_lsd",
+      "enable_natpmp",
+      "enable_outgoing_tcp",
+      "enable_outgoing_utp",
+      "enable_set_file_valid_data",
+      "enable_upnp",
+      "handshake_client_version",
+      "handshake_timeout",
+      "i2p_hostname",
+      "i2p_port",
+      "in_enc_policy",
+      "listen_system_port_fallback",
+      "local_service_announce_interval",
+      "max_concurrent_http_announces",
+      "max_http_recv_buffer_size",
+      "max_metadata_size",
+      "max_paused_peerlist_size",
+      "max_peerlist_size",
+      "max_pex_peers",
+      "max_piece_count",
+      "max_retry_port_bind",
+      "max_suggest_pieces",
+      "max_web_seed_connections",
+      "metadata_token_limit",
+      "min_announce_interval",
+      "no_connect_privileged_ports",
+      "no_recheck_incomplete_resume",
+      "num_optimistic_unchoke_slots",
+      "num_outgoing_ports",
+      "num_want",
+      "optimistic_disk_retry",
+      "optimistic_unchoke_interval",
+      "out_enc_policy",
+      "outgoing_interfaces",
+      "outgoing_port",
+      "peer_connect_timeout",
+      "peer_dscp",
+      "peer_fingerprint",
+      "piece_extent_affinity",
+      "piece_timeout",
+      "prefer_rc4",
+      "prefer_udp_trackers",
+      "prioritize_partial_pieces",
+      "rate_limit_ip_overhead",
+      "recv_socket_buffer_size",
+      "report_redundant_bytes",
+      "report_true_downloaded",
+      "report_web_seed_downloads",
+      "request_queue_time",
+      "resolver_cache_timeout",
+      "seed_time_limit",
+      "seeding_outgoing_connections",
+      "seeding_piece_quota",
+      "send_redundant_have",
+      "send_socket_buffer_size",
+      "share_mode_target",
+      "smooth_connects",
+      "socks5_udp_send_local_ep",
+      "ssrf_mitigation",
+      "stop_tracker_timeout",
+      "support_share_mode",
+      "tick_interval",
+      "tracker_backoff",
+      "tracker_completion_timeout",
+      "tracker_maximum_response_length",
+      "tracker_receive_timeout",
+      "udp_tracker_token_expiry",
+      "unchoke_interval",
+      "upload_rate_limit",
+      "upnp_ignore_nonrouters",
+      "upnp_lease_duration",
+      "urlseed_max_request_bytes",
+      "urlseed_pipeline_size",
+      "urlseed_timeout",
+      "urlseed_wait_retry",
+      "use_dht_as_fallback",
+      "user_agent",
+      "utp_connect_timeout",
+      "utp_cwnd_reduce_timer",
+      "utp_fin_resends",
+      "utp_gain_factor",
+      "utp_loss_multiplier",
+      "utp_min_timeout",
+      "utp_num_resends",
+      "utp_syn_resends",
+      "utp_target_delay",
+      "validate_https_trackers",
+      "web_seed_name_lookup_retry"
     ]
   });
 
