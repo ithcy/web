@@ -9,6 +9,7 @@ import prefixPath from './base';
 import AppErrorModal from './components/AppErrorModal';
 import Query from './components/Query';
 import SettingsDrawer from './components/SettingsDrawer';
+import { clearStoredAuth } from './contexts/auth';
 import useNinja from './contexts/ninja';
 import { AuthError, useRPC } from './services/jsonrpc';
 
@@ -27,6 +28,7 @@ function AuthApp() {
   const { isNinja, toggleNinja } = useNinja();
 
   if (error && error instanceof AuthError) {
+    clearStoredAuth();
     return <Navigate to="/login" />
   }
 
